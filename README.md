@@ -12,6 +12,8 @@ The target group for this site profile are travel bloggers that want to have a f
 
 This is a complete ProcessWire site profile.
 
+It requires ProcessWire version >= 3.0.82.
+
 To install it, download a fresh copy of ProcessWire from the [download page](https://processwire.com/download/) and extract it into your web server folder (either root or a subdirectory, though don't forget to edit your .htaccess after installation in the latter case).
 
 Download a [zipped copy of this repository](https://github.com/BitPoet/pw-profile-striped/archive/master.zip) and extract the site-blog-striped folder into the ProcessWire installation's root folder.
