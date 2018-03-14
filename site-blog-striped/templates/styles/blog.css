@@ -1,0 +1,118 @@
+#wrap_Inputfield_scf-website {
+	display: none;
+}
+
+li.CommentListItem {
+	padding-left: 1em;
+}
+
+ul.CategoryList > li > a, ul.SearchResults > li > a {
+	font-size:			1.5em;
+	font-weight:		bold;
+	text-decoration:	none;
+}
+
+ul.CategoryList > li, ul.SearchResults > li {
+	margin-bottom:	1em;
+}
+
+div.CommentForm_new > h3 {
+	cursor: pointer;
+}
+
+div.CommentForm_new > form {
+	display: none;
+}
+
+div.HomeCards {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-between;
+}
+ 
+div.HomeCard {
+    position: relative;
+    flex: 0 1 98%;
+    padding: 0;
+    padding-bottom: 2em;
+    margin-bottom: 2em;
+}
+
+p.HomeCardBlank {
+	margin: 0;
+	width: 100%;
+	height: 5em;
+	background-color: grey;
+}
+
+img.HomeCardImage {
+	margin: 0;
+	width: 100%;
+}
+
+h3.HomeCardTitle {
+	position: absolute;
+	padding: 0.2em;
+	font-size: 1.5em;
+	left: 1em;
+	top: 1em;
+	margin-left: auto;
+	margin-right: auto;
+	color: white;
+	font-shadow: 0 0 2px black;
+	opacity: 0.9;
+}
+
+a.button.morelink, a.button.prevlink, a.button.nextlink {
+	background-color: #e8e8e8;
+	background-image: url("../assets/css/images/bg02.png");
+	color: #565656;
+}
+
+article.post-excerpt {
+	border-top: 1px solid lightgrey;
+}
+
+.BlogBody ul {
+	list-style: disc outside;
+	padding-left: 2em;
+}
+
+.BlogBody ul ul {
+	list-style: circle outside;
+}
+
+.BlogBody ul ul ul {
+	list-style: square outside;
+}
+
+
+.box.calendar td.today > span {
+	background-color: #c94663;
+	background-image: url("images/bg01.png");
+	box-shadow: inset 0px 0px 0px 1px rgba(255, 255, 255, 0.15), 0 0.025em 0.15em 0em rgba(0, 0, 0, 0.25);
+	color: #fff !important;
+}
+
+li.CurrentCategory a, li.CurrentTag a {
+	font-weight: bold;
+	margin-left: 1em;
+}
+
+@media screen and (min-width: 737px) {
+	div.HomeCard {
+	    flex: 0 1 49%;
+	}
+}
+
+@media screen and (min-width: 1201px) {
+	div.HomeCard {
+    	flex: 0 1 32%;
+    }
+}
+
+@media screen and (max-width: 736px) {
+	div.HomeCard {
+    	flex: 0 1 98%;
+    }
+}

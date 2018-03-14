@@ -1,0 +1,135 @@
+<?php
+
+/**
+ * ProcessWire ColorPicker Fieldtype
+ *
+ * created by Philipp "Soma" Urlich
+ * ColorPicker jQuery Plugin by http://www.eyecon.ro/colorpicker/
+ *
+ * additions (swatches) by @Rayden
+ *
+ * Licensed under LGPL3 http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ */
+
+class FieldtypeColorPicker extends Fieldtype {
+
+	const TRANSPARENT 	= "transparent";
+	const HEX_PREFIX 	= "#";
+
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'ColorPicker',
+			'version' => 202,
+			'summary' => 'Fieldtype that stores a HEX color or the value transp. Color can be picked using a jQuery ColorPicker Plugin by http://www.eyecon.ro/colorpicker/ or from a configurable color swatch.',
+			'href' => 'http://processwire.com/talk/topic/865-module-colorpicker/page__gopid__7340#entry7340',
+			'installs' => 'InputfieldColorPicker'
+			);
+	}
+
+	/**
+	 * Return the default or if not set a blank value
+	 *
+	 */
+	public function getBlankValue(Page $page, Field $field) {
+		if($field->default == "0") $field->default = "000000";
+		return $field->default ? $field->default : '';
+	}
+
+
+	/**
+	 * Return the associated InputfieldColorPicker
+	 *
+	 */
+	public function getInputfield(Page $page, Field $field) {
+		$inputField = $this->modules->get('InputfieldColorPicker');
+		$inputField->set('default', $field->default);
+		$inputField->set('swatch', $field->swatch);
+		return $inputField;
+	}
+
+	/**
+	 * Format the value for output
+	 * @param  Page   $page
+	 * @param  Field  $field
+	 * @param  mixed $value
+	 * @return string
+	 */
+	public function ___formatValue(Page $page, Field $field, $value){
+
+		if(!$value) $value = trim($field->default);
+		if(!strlen($value)) return $value;
+		if(!$field->formatting) return $value;
+
+		if("transp" == strtolower($value)) return self::TRANSPARENT;
+		if($value == "0") $value = "000000";
+
+		return self::HEX_PREFIX . $value;
+	}
+
+	/**
+	 * Render formatted markup for use in Admin ie. Lister
+	 */
+	public function ___markupValue(Page $page, Field $field, $value = null, $property = '') {
+		$m = "";
+		if($value) {
+			$m = "<span class='Markup_{$this->className}' style='width: 1em; height: 1em; display: inline-block; background-color:#" . $value . "'></span>";
+		}
+		return $m;
+	}
+
+	/**
+	 * sanitize the HEX value and cut off characters if longer than 6
+	 */
+	public function sanitizeValue(Page $page, Field $field, $value) {
+		$value = $value == "transp" ? $value : strtoupper(substr($value, 0, 6));
+		return $value;
+	}
+
+	/**
+	 * Return the database schema in specified format
+	 *
+	 */
+	public function getDatabaseSchema(Field $field) {
+		$schema = parent::getDatabaseSchema($field);
+		$schema['data'] = 'CHAR(6) NOT NULL'; // i.e. FFFFFF or 333333 (hex color codes) or transp
+		return $schema;
+	}
+
+	/**
+	 * set the config option fields for this field
+	 *
+	 */
+	public function ___getConfigInputfields(Field $field) {
+		$inputfields = parent::___getConfigInputfields($field);
+
+		$f = $this->modules->get("InputfieldText");
+		$f->attr('name', 'default');
+		$f->attr('size', 6);
+		$f->attr('value', $field->default);
+		$f->label = $this->_('Default Value');
+		$f->description = $this->_('Set the default HEX value or "transp" (transparent) for the field.');
+		$f->notes = $this->_('For example "EAEAEA". To have a blank value leave this field empty.');
+		$inputfields->append($f);
+
+		/* additions (swatches) by @Rayden */
+		$f = $this->modules->get("InputfieldTextarea");
+		$f->attr('name', 'swatch');
+		$f->attr('value', $field->swatch);
+		$f->label = $this->_('Color Swatch');
+		$f->description = $this->_('Comma seperated HEX values or "transp" (transparent) to add color swatches for each.');
+		$f->notes = $this->_('For example "transp,FFFFFF,000000". Leave this field empty if you do not want to use the color swatch.');
+		$inputfields->append($f);
+
+		$f = $this->modules->get("InputfieldCheckbox");
+		$f->attr('name', 'formatting');
+		$f->attr('value', $field->formatting);
+		$f->attr('checked', $field->formatting ? 'checked' : '');
+		$f->label = $this->_('Turn on output formatting');
+		$f->description = $this->_('Enabling this turns on output formatting for this field. This will return the HEX value of the field already prefixed with "#" for convenience i.e "#FFAADD" and "transp" will be output as "transparent".');;
+		$inputfields->append($f);
+
+		return $inputfields;
+	}
+
+}

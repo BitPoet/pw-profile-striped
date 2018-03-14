@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * An Inputfieldtype for handling Colors
+ * used by the FieldtypeColorPicker
+ *
+ * created by Philipp "Soma" Urlich
+ * ColorPicker jQuery Plugin by http://www.eyecon.ro/colorpicker/
+ *
+ * additions (swatches) by @Rayden
+ *
+ * Licensed under LGPL3 http://www.gnu.org/licenses/lgpl-3.0.txt
+ *
+ */
+
+class InputfieldColorPicker extends Inputfield {
+
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'ColorPicker',
+			'version' => 202,
+			'summary' => 'Choose your colors the easy way.',
+			'href' => 'http://processwire.com/talk/topic/865-module-colorpicker/page__gopid__7340#entry7340',
+			'requires' => array("FieldtypeColorPicker")
+			);
+	}
+
+	public function __construct() {
+		parent::__construct();
+		$this->setAttribute('type', 'hidden');
+	}
+
+	/**
+	 * inputfield is loaded
+	 */
+	public function init() {
+		parent::init();
+		$conf = $this->getModuleInfo();
+		$version = (int) $conf['version'];
+		// append script needed for the inputfield
+		$this->config->styles->add($this->config->urls->InputfieldColorPicker . "colorpicker/css/colorpicker.css?v={$version}");
+		$this->config->scripts->add($this->config->urls->InputfieldColorPicker . "colorpicker/js/colorpicker.min.js?v={$version}");
+	}
+
+	/**
+	 * render the markup for this iputfield
+	 * @return string html markup
+	 */
+	public function ___render() {
+
+		$out  = "\n<div id='ColorPicker_$this->name' style='border:2px solid #444; display:block;";
+		$out .= "width:40px; height:40px; background-color:";
+		$out .= $this->value == "transp"
+				? $this->value . "; background-image:url({$this->config->urls->InputfieldColorPicker}transparent.gif);"
+				: "#" . $this->value . "; background-image:none";
+		$out .= "' data-color='" . $this->value . "'></div>";
+		$out .= "<input " . $this->getAttributesString() . " />";
+		if($this->default == "0") $this->default = "000000";
+		$out .= "<a class='ColorPickerReset' href='#' data-default='{$this->default}' ";
+		$out .= "data-modurl='{$this->config->urls->InputfieldColorPicker}'>" . $this->_('reset color') . "</a>";
+
+		/**
+		 * add swatches for predefined color values | @Rayden
+		 */
+		$swatch = trim($this->swatch);
+
+		if(strlen($swatch)) {
+
+			$csvalues = explode(",", trim($swatch));
+
+			if(count($csvalues)) {
+
+				$out .= "<ul>";
+
+				foreach($csvalues as $csvalue) {
+					$csvalue = trim($csvalue);
+					if($csvalue == "0") $csvalue = "000000";
+					$out .= "<li style='float:left; margin:0 4px 4px 0; border:1px solid #444; width:16px; height:16px; background-color:";
+					$out .= $csvalue == "transp"
+							? $csvalue . ";background-image:url({$this->config->urls->InputfieldColorPicker}transparent.gif);"
+							: "#" . $csvalue;
+					$out .= "'><div class='ColorPickerSwatch' href='#' data-color='{$csvalue}' style='width:16px;height:16px;display:block;cursor:pointer;' title='{$csvalue}'></div></li>";
+				}
+
+				$out .= "</ul>";
+			}
+		}
+
+		return $out;
+	}
+
+
+}
