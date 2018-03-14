@@ -9,9 +9,9 @@ function monthSnippet($date) {
 
 function blogPager($blogposts) {
 	$pager = $blogposts->renderPager(array(
-		"nextItemLabel"			=>	_("Next Page &gt;"),
+		"nextItemLabel"			=>	__("Next Page &gt;"),
 		"nextItemClass"			=>	"next",
-		"previousItemLabel"		=>	_("&lt; Previous Page"),
+		"previousItemLabel"		=>	__("&lt; Previous Page"),
 		"previousItemClass"		=>	"previous",
 		"listMarkup"			=>	"{out}",
 		"itemMarkup"			=>	"{class}|{out}",
